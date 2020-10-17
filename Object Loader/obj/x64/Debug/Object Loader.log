@@ -1,0 +1,19 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1850,5): warning : The referenced project '..\..\dependencies\glfw3\GLFW.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1850,5): warning : The referenced project '..\..\dependencies\glad\Glad.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1850,5): warning : The referenced project '..\..\dependencies\stbs\Stbs.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1850,5): warning : The referenced project '..\..\dependencies\imgui\ImGui.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1850,5): warning : The referenced project '..\..\dependencies\tinyGLTF\TinyGLTF.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1850,5): warning : The referenced project '..\..\modules\FMODStudio\FMODStudio.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1850,5): warning : The referenced project '..\..\modules\NOU\NOU.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1850,5): warning : The referenced project '..\..\modules\sampleModule\sampleModule.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1850,5): warning : The referenced project '..\..\modules\toolkit\toolkit.vcxproj' does not exist.
+  Camera.cpp
+  IBuffer.cpp
+  ObjLoader.cpp
+  Shader.cpp
+C:\Users\jcnar\Documents\Github\ObjectLoader\Object Loader\src\Shader.h(9,10): fatal error C1083: Cannot open include file: 'Logging.h': No such file or directory
+  VertexArrayObject.cpp
+C:\Users\jcnar\Documents\Github\ObjectLoader\Object Loader\src\VertexArrayObject.cpp(3,10): fatal error C1083: Cannot open include file: 'Logging.h': No such file or directory
+  main.cpp
+C:\Users\jcnar\Documents\Github\ObjectLoader\Object Loader\src\Shader.h(9,10): fatal error C1083: Cannot open include file: 'Logging.h': No such file or directory
+  Generating Code...
