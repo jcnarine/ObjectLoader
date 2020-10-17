@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Untouchables (For Organization)">
+      <UniqueIdentifier>{DF637773-4B47-86B3-544A-B4EFC0AC4C04}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ObjLoader.h" />
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\IBuffer.h" />
+    <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\VertexArrayObject.h" />
+    <ClInclude Include="src\VertexBuffer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ObjLoader.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\IBuffer.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\VertexArrayObject.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="src\monkey.obj" />
+  </ItemGroup>
+</Project>
