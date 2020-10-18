@@ -79,10 +79,6 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-	glm::mat4 transform = glm::mat4(1.0f);
-	glm::mat4 transform2 = glm::mat4(1.0f);
-	glm::mat4 transform3 = glm::mat4(1.0f);
-
 	camera = Camera::Create();
 	camera->SetPosition(glm::vec3(0, 3, 3)); // Set initial position
 	camera->SetUp(glm::vec3(0, 0, 1)); // Use a z-up coordinate system
@@ -94,7 +90,7 @@ int main() {
 
 	Shader::sptr shader = Shader::Create();
 	shader->LoadShaderPartFromFile("shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
-	shader->LoadShaderPartFromFile("shaders/frag_blinn_phong.glsl", GL_FRAGMENT_SHADER);
+	shader->LoadShaderPartFromFile("shaders/frag_shader.glsl", GL_FRAGMENT_SHADER);
 	shader->Link();
 
 	glm::mat4 transform = glm::mat4(1.0f);

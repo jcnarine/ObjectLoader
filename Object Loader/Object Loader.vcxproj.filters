@@ -13,10 +13,6 @@
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\VertexArrayObject.h" />
     <ClInclude Include="src\VertexBuffer.h" />
-    <ClInclude Include="external\GLFW\glfw3native.h" />
-    <ClInclude Include="external\glad\glad.h" />
-    <ClInclude Include="external\GLFW\glfw3.h" />
-    <ClInclude Include="external\KHR\khrplatform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ObjLoader.cpp" />
@@ -25,9 +21,8 @@
     <ClCompile Include="src\IBuffer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\VertexArrayObject.cpp" />
-    <ClCompile Include="src\glad.c" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="lib\glfw3.lib" />
+    <Text Include="src\Text.txt" />
   </ItemGroup>
 </Project>

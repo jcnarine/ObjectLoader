@@ -128,7 +128,7 @@ VertexArrayObject::sptr ObjLoader::makeVAO() {
 		});
 
 	result->AddVertexBuffer(col_vbo, {
-	BufferAttribute(1, 3, GL_FLOAT, false, 0, NULL)
+	BufferAttribute(1, 4, GL_FLOAT, false, 0, NULL)
 		});
 
 	result->SetIndexBuffer(ebo);
@@ -139,24 +139,4 @@ VertexArrayObject::sptr ObjLoader::makeVAO() {
  ObjLoader::ObjLoader(const std::string f)
  {
  filename = f;
- }
-
- std::vector<glm::vec3> ObjLoader::returnVertices()
- {
-	 return out_vertices;
- }
-
- std::vector<glm::vec2> ObjLoader::returnUvs()
- {
-	 return out_uvs;
- }
-
- std::vector<glm::vec3> ObjLoader::returnNormals()
- {
-	 return out_normal;
- }
-
- std::vector<glm::vec3> ObjLoader::returnColour()
- {
-	 return out_colour;
  }
