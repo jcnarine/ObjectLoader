@@ -1,9 +1,11 @@
+#include <Logging.h>
 #include <iostream>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <filesystem>
+#include <json.hpp>
 #include <fstream>
 
 #include <GLM/glm.hpp>
@@ -21,6 +23,7 @@
 #include "imgui_impl_opengl3.h"
 
 #define LOG_GL_NOTIFICATIONS
+
 
 GLFWwindow* window;
 Camera::sptr camera = nullptr;
@@ -71,11 +74,6 @@ int main() {
 
 	// Let OpenGL know that we want debug output, and route it to our handler function
 	glEnable(GL_DEBUG_OUTPUT);
-	glDebugMessageCallback(GlDebugMessage, nullptr);
-
-	ObjLoader monkey("Text.txt");
-
-	monkey.loadObj();
 
 	// GL states
 	glEnable(GL_DEPTH_TEST);
@@ -91,8 +89,16 @@ int main() {
 	camera->LookAt(glm::vec3(0.0f)); // Look at center of the screen
 	camera->SetFovDegrees(90.0f); // Set an initial FOV
 
-		
-	// Our high-precision timer
+	ObjLoader creeper("creeper.obj");
+	VertexArrayObject::sptr vao = creeper.loadObj();
+
+	Shader::sptr shader = Shader::Create();
+	shader->LoadShaderPartFromFile("shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
+	shader->LoadShaderPartFromFile("shaders/frag_blinn_phong.glsl", GL_FRAGMENT_SHADER);
+	shader->Link();
+
+	glm::mat4 transform = glm::mat4(1.0f);
+
 	double lastFrame = glfwGetTime();
 	
 	///// Game loop /////
@@ -103,24 +109,15 @@ int main() {
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
 
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			transform3 = glm::translate(transform3, glm::vec3( 1.0f * dt, 0.0f, 0.0f));
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			transform3 = glm::translate(transform3, glm::vec3(-1.0f * dt, 0.0f, 0.0f));
-		}
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			transform3 = glm::translate(transform3, glm::vec3(0.0f, -1.0f * dt, 0.0f));
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			transform3 = glm::translate(transform3, glm::vec3(0.0f,  1.0f * dt, 0.0f));
-		}
-				
-		transform = glm::rotate(glm::mat4(1.0f), static_cast<float>(thisFrame), glm::vec3(0, 1, 0));
-		transform2 = transform * glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.0f, glm::sin(static_cast<float>(thisFrame))));
+		transform = glm::rotate(glm::mat4(1.0f), static_cast<float>(thisFrame), glm::vec3(1, 0, 0));
 		
 		glClearColor(0.08f, 0.17f, 0.31f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transform);
+		shader->SetUniformMatrix("u_Model", transform);
+		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transform));
+		vao->Render();
 
 		glfwSwapBuffers(window);
 		lastFrame = thisFrame;
