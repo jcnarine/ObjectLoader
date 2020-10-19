@@ -34,7 +34,6 @@ VertexArrayObject::sptr ObjLoader::loadObj()
  {
 	 std::ifstream file;
 	 file.open(filename, std::ios::binary);
-	 std::istringstream ss;
 	 // If our file fails to open, we will throw an error
 	 if (!file) {
 		 throw std::runtime_error("Failed to open file");
@@ -46,42 +45,44 @@ VertexArrayObject::sptr ObjLoader::loadObj()
 
 	 std::string line, id;
 
-	 ss.clear();
-	 ss.str(line);
-	 ss >> id;
-
 	 // Iterate as long as there is content to read
 	 while (std::getline(file, line)) {
 		 trim(line);
-		 if (id == "#")
+		 if (line.substr(0, 2) == "# ")
 		 {
 			 // Comment, no-op
 		 }
-		 else if (id == "v")
+		 else if (line.substr(0, 2) == "v ")
 		 {
+			 std::istringstream ss = std::istringstream(line.substr(2));
 			 glm::vec3 pos;
 			 ss >> pos.x >> pos.y >> pos.z;
 			 temp_vertices.push_back(pos);
 		 }
-		 else if (id == "vt")
+		 else if (line.substr(0, 3) == "vt ")
 		 {
-			 glm::vec3 uv;
-			 ss >> uv.x >> uv.y >> uv.z;
+			 std::istringstream ss = std::istringstream(line.substr(3));
+			 glm::vec2 uv;
+			 ss >> uv.x >> uv.y;
 			 temp_uvs.push_back(uv);
 		 }
-		 else if (id == "vn")
+		 else if (line.substr(0, 3) == "vn ")
 		 {
+			 std::istringstream ss = std::istringstream(line.substr(3));
 			 glm::vec3 normal;
 			 ss >> normal.x >> normal.y >> normal.z;
 			 temp_normals.push_back(normal);
 		 }
-		 else if (id == "f")
+		 else if (line.substr(0, 2) == "f ")
 		 {
+			 std::istringstream ss = std::istringstream(line.substr(2));
+
 			 std::string v1, v2, v3;
+			 char tempIgnoreChar;
 
 			 unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
 
-			 ss >> vertexIndex[0] >> vertexIndex[1] >> vertexIndex[2] >> uvIndex[0] >> uvIndex[1] >> uvIndex[2] >> normalIndex[0] >> normalIndex[1] >> normalIndex[2];
+			 ss >> vertexIndex[0] >> tempIgnoreChar >> uvIndex[0] >> tempIgnoreChar >> normalIndex[0] >>  vertexIndex[1] >> tempIgnoreChar >> uvIndex[1] >> tempIgnoreChar >> normalIndex[1] >> vertexIndex[2] >> tempIgnoreChar >> uvIndex[2] >> tempIgnoreChar >> normalIndex[2];
 
 			 vertexIndices.push_back(vertexIndex[0]);
 			 vertexIndices.push_back(vertexIndex[1]);
@@ -96,42 +97,44 @@ VertexArrayObject::sptr ObjLoader::loadObj()
 		 }else{}
 	 }
 
-	 for (unsigned int i = 0; i < vertexIndices.size(); ++i)
+	 for (unsigned int i = 0; i < vertexIndices.size(); i++)
 	 {
-		 out_vertices.push_back(temp_vertices[vertexIndices[i] - 1]);
-		 out_uvs.push_back(temp_uvs[uvIndices[i] - 1]);
-		 out_colour.push_back(glm::vec3(1.f, 1.f, 1.f));
-		 if (i<normalIndices.size()){
-			 out_normal.push_back(temp_normals[normalIndices[i] - 1]);
-		 }
-	 }
+		 unsigned int vertexIndex = vertexIndices[i];
+		 unsigned int uvIndex = uvIndices[i];
+		 unsigned int normIndex = normalIndices[i];
 
+		 Interleaved.push_back(temp_vertices[vertexIndex - 1].x);
+		 Interleaved.push_back(temp_vertices[vertexIndex - 1].y);
+		 Interleaved.push_back(temp_vertices[vertexIndex - 1].z);
+		 Interleaved.push_back(1.0f);
+		 Interleaved.push_back(1.0f);
+		 Interleaved.push_back(1.0f);
+		 Interleaved.push_back(temp_uvs[uvIndex - 1].x);
+		 Interleaved.push_back(temp_uvs[uvIndex - 1].y);
+		 Interleaved.push_back(temp_normals[normIndex - 1].x);
+		 Interleaved.push_back(temp_normals[normIndex - 1].y);
+		 Interleaved.push_back(temp_normals[normIndex - 1].z);
+	 }
+	 
 	 std::cout<<"Loading Object was a success!";
 	 return makeVAO();
  }
 
 VertexArrayObject::sptr ObjLoader::makeVAO() {
 
-	VertexBuffer::sptr pos_vbo = VertexBuffer::Create();
-	pos_vbo->LoadData(out_vertices.data(), out_vertices.size());
-
-	VertexBuffer::sptr col_vbo = VertexBuffer::Create();
-	col_vbo->LoadData(out_colour.data(), out_colour.size());
-
-	IndexBuffer::sptr ebo = IndexBuffer::Create();
-	ebo->LoadData(vertexIndices.data(), vertexIndices.size());
+	VertexBuffer::sptr vbo = VertexBuffer::Create();
+	vbo->LoadData(Interleaved.data(), Interleaved.size());
 
 	VertexArrayObject::sptr result = VertexArrayObject::Create();
 
-	result->AddVertexBuffer(pos_vbo, {
-		BufferAttribute(0, 3, GL_FLOAT, false, 0, NULL)
-		});
+	size_t stride = sizeof(float) * 11;
 
-	result->AddVertexBuffer(col_vbo, {
-	BufferAttribute(1, 4, GL_FLOAT, false, 0, NULL)
+	result->AddVertexBuffer(vbo, {
+	BufferAttribute(0, 3, GL_FLOAT, false, stride, NULL),
+	BufferAttribute(1, 3, GL_FLOAT, false, stride, sizeof(float) * 3),
+	BufferAttribute(2, 2, GL_FLOAT, false, stride, sizeof(float) * 6),
+	BufferAttribute(3, 3, GL_FLOAT, false, stride, sizeof(float) * 8)
 		});
-
-	result->SetIndexBuffer(ebo);
 
 	return result;
 }

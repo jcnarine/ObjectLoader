@@ -80,8 +80,8 @@ int main() {
 	glEnable(GL_CULL_FACE);
 
 	camera = Camera::Create();
-	camera->SetPosition(glm::vec3(0, 3, 3)); // Set initial position
-	camera->SetUp(glm::vec3(0, 0, 1)); // Use a z-up coordinate system
+	camera->SetPosition(glm::vec3(0, 15, 20)); // Set initial position
+	camera->SetUp(glm::vec3(0, 1, 0)); // Use a z-up coordinate system
 	camera->LookAt(glm::vec3(0.0f)); // Look at center of the screen
 	camera->SetFovDegrees(90.0f); // Set an initial FOV
 
@@ -94,6 +94,7 @@ int main() {
 	shader->Link();
 
 	glm::mat4 transform = glm::mat4(1.0f);
+	glm::mat3 rotate = glm::mat3(1.0f);
 
 	double lastFrame = glfwGetTime();
 	
@@ -104,17 +105,33 @@ int main() {
 		// Calculate the time since our last frame (dt)
 		double thisFrame = glfwGetTime();
 		float dt = static_cast<float>(thisFrame - lastFrame);
-
-		transform = glm::rotate(glm::mat4(1.0f), static_cast<float>(thisFrame), glm::vec3(1, 0, 0));
 		
+		rotate = glm::rotate(glm::mat4(1.0f), static_cast<float>(thisFrame), glm::vec3(0, 1, 0));
+		transform = glm::translate(glm::mat4(1.0f), glm::vec3(-10,-15,0));
+		transform = glm::rotate(transform, static_cast<float>(thisFrame), glm::vec3(0, 1, 0));
+
 		glClearColor(0.08f, 0.17f, 0.31f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		shader->Bind();
+		shader->SetUniform("LightPos", camera->GetPosition());
 		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transform);
 		shader->SetUniformMatrix("u_Model", transform);
-		shader->SetUniformMatrix("u_ModelRotation", glm::mat3(transform));
-		vao->Render();
+		shader->SetUniformMatrix("u_ModelRotation", rotate);
 
+		vao->Render();		
+		
+		rotate = glm::rotate(glm::mat4(1.0f), static_cast<float>(thisFrame), glm::vec3(0, 0, -1));
+		transform = glm::translate(glm::mat4(1.0f), glm::vec3(10, -15, 4));
+		transform = glm::rotate(transform, static_cast<float>(thisFrame), glm::vec3(0, -1, 0));
+
+		shader->SetUniform("LightPos", camera->GetPosition());
+		shader->SetUniformMatrix("u_ModelViewProjection", camera->GetViewProjection() * transform);
+		shader->SetUniformMatrix("u_Model", transform);
+		shader->SetUniformMatrix("u_ModelRotation", rotate);
+
+		vao->Render();
+		
 		glfwSwapBuffers(window);
 		lastFrame = thisFrame;
 	}
